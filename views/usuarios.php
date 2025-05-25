@@ -90,7 +90,7 @@ $TituloSeccion = "Gestión de Usuarios";
     <?php require_once __DIR__ . '/../basics/head.php'; ?>
 </head>
 <body>
-    <?php require_once __DIR__ . '/../basics/menu.php'; ?>
+    <?php require_once __DIR__ . '/../basics/menu.usuarios.php'; ?>
 
     <div class="container mt-4">
         <h2><?= htmlspecialchars($TituloSeccion, ENT_QUOTES, 'UTF-8') ?></h2>

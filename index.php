@@ -19,10 +19,18 @@ if (empty($_SESSION['csrf_token'])) {
     <title>Inicio de Sesión - Catedra</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php require_once __DIR__ . '/basics/head.php'; ?>
+    
 </head>
 <body class="d-flex align-items-center justify-content-center vh-100">
-    <div class="shadow-lg p-4 col-sm-5 bg-white rounded">
-        <div class="text-center border border-primary rounded bg-light p-3">
+    <button type="button"
+    class="btn btn-outline-secondary position-absolute"
+    id="btnTema"
+    title="Cambiar tema"
+    style="top: 2rem; right: 2rem; z-index: 99;">
+    <span id="iconTema" class="bi bi-moon"></span>
+</button>
+    <div class="shadow-lg p-4 col-sm-5 bg-body rounded">
+        <div class="text-center border rounded p-3 bg-body-secondary">
             <?php if ($errMsg): ?>
                 <div class="alert alert-danger" role="alert" aria-live="polite">
                     <?= htmlspecialchars($errMsg, ENT_QUOTES, 'UTF-8') ?>
@@ -75,6 +83,7 @@ if (empty($_SESSION['csrf_token'])) {
             </div>
         </div>
     </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const revealBtn = document.querySelector('.reveal'),
@@ -89,5 +98,6 @@ if (empty($_SESSION['csrf_token'])) {
         }
     });
     </script>
+    <script src="/Catedra/js/script.js"></script>
 </body>
 </html>

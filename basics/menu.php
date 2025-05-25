@@ -1,4 +1,4 @@
-<!-- inc/menu.php -->
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4">
     <div class="container">
         <a class="navbar-brand" href="/Catedra/auth/logout.php">Salir</a>
