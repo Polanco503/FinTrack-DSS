@@ -1,5 +1,5 @@
 <!-- inc/menu.php -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+<nav class="navbar navbar-expand-lg bg-body-tertiary mb-4">
     <div class="container">
         <a class="navbar-brand" href="/Catedra/auth/logout.php">Salir</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -7,13 +7,13 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="">RAW</a>
-                    <a class="nav-link" href="">RAW</a>
-                    <a class="nav-link" href="">RAW</a>
-                    <a class="nav-link" href="">RAW</a>
-                    <a class="nav-link" href="">RAW</a>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="#">RAW1</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">RAW2</a></li>
+                <li class="nav-item ms-2">
+                    <button type="button" class="btn btn-outline-secondary" id="btnTema" title="Cambiar tema">
+                        <span id="iconTema" class="bi bi-moon"></span>
+                    </button>
                 </li>
             </ul>
         </div>

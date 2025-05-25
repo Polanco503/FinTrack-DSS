@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = $stmt->get_result()->fetch_assoc();
 
         if ($row && password_verify($password, $row['contrasena_hash'])) {
-            $_SESSION['usuario']     = $row['usuario'];
-            $_SESSION['email']       = $row['email']      ?? '';
-            $_SESSION['nombres']     = $row['nombres']    ?? '';
-            $_SESSION['apellidos']   = $row['apellidos']  ?? '';
+            $_SESSION['usuario'] = $row['usuario'];
+            $_SESSION['email'] = $row['email'] ?? '';
+            $_SESSION['nombres'] = $row['nombres'] ?? '';
+            $_SESSION['apellidos'] = $row['apellidos'] ?? '';
             $_SESSION['autenticado'] = "SI";
             session_regenerate_id(true);
             unset($_SESSION['csrf_token']);
