@@ -2,7 +2,7 @@
 require_once('bd/Connections/conn.php'); // aquí ya se hace session_start()
 
 // ✅ Validación de sesión, mantenla
-if (!isset($_SESSION['utenticado']) || $_SESSION['utenticado'] !== 'SI') {
+if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== 'SI') {
     header("Location: index.php");
     exit;
 }

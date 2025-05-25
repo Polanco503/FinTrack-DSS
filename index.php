@@ -1,95 +1,38 @@
 <?php
-// index.php
 session_start();
-require_once __DIR__ . '/bd/Connections/conn.php';
-
-// Si ya está autenticado, vamos al dashboard
-if (!empty($_SESSION['utenticado']) && $_SESSION['utenticado'] === 'SI') {
+if (!empty($_SESSION['autenticado']) && $_SESSION['autenticado'] === 'SI') {
     header("Location: /Catedra/views/dashboard.php");
     exit;
 }
 
-// Generar token CSRF si no existe
+// Mensaje de error (opcional, enviado por login.php vía querystring)
+$errMsg = $_GET['error'] ?? '';
+$usuario = $_GET['usuario'] ?? '';
+// CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-$err    = false;
-$errMsg = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 1) Verificar token CSRF
-    if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        http_response_code(400);
-        die('Solicitud inválida (CSRF).');
-    }
-
-    // 2) Sanitizar y validar entradas
-    $usuario  = trim($_POST['inputUsuario']  ?? '');
-    $password = trim($_POST['inputPassword'] ?? '');
-
-    if (strlen($usuario) < 4 || strlen($usuario) > 32 ||
-        !preg_match('/^[A-Za-z0-9_]+$/', $usuario)) {
-        $err    = true;
-        $errMsg = 'Usuario inválido. 4–32 caracteres alfanuméricos o “_”.';
-    }
-    elseif (strlen($password) < 5 || strlen($password) > 128) {
-        $err    = true;
-        $errMsg = 'La contraseña debe tener entre 5 y 128 caracteres.';
-    }
-
-    // 3) Si pasa validaciones, intentamos el login
-    if (! $err) {
-        $sql  = "SELECT id, contrasena_hash, usuario, email, nombres, apellidos
-                 FROM usuarios
-                 WHERE usuario = ?";
-        $stmt = $db->prepare($sql);
-        $stmt->bind_param("s", $usuario);
-        $stmt->execute();
-        $row = $stmt->get_result()->fetch_assoc();
-
-        if ($row && password_verify($password, $row['contrasena_hash'])) {
-            // Éxito: creamos sesión segura
-            $_SESSION['usuario']    = $row['usuario'];
-            $_SESSION['email']      = $row['email']    ?? '';
-            $_SESSION['nombres']    = $row['nombres']  ?? '';
-            $_SESSION['apellidos']  = $row['apellidos']?? '';
-            $_SESSION['utenticado'] = "SI";
-
-            // Regenerar ID de sesión y limpiar CSRF
-            session_regenerate_id(true);
-            unset($_SESSION['csrf_token']);
-
-            header("Location: /Catedra/views/dashboard.php");
-            exit;
-        } else {
-            $err    = true;
-            $errMsg = 'Usuario o contraseña incorrecta.';
-        }
-        $stmt->close();
-    }
-}
-
-$TituloSeccion = "Inicio de Sesión";
 ?>
 <!doctype html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
+    <title>Inicio de Sesión - Catedra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php require_once __DIR__ . '/basics/head.php'; ?>
 </head>
 <body class="d-flex align-items-center justify-content-center vh-100">
     <div class="shadow-lg p-4 col-sm-5 bg-white rounded">
         <div class="text-center border border-primary rounded bg-light p-3">
-            <?php if ($err): ?>
-                <div class="alert alert-danger" role="alert">
+            <?php if ($errMsg): ?>
+                <div class="alert alert-danger" role="alert" aria-live="polite">
                     <?= htmlspecialchars($errMsg, ENT_QUOTES, 'UTF-8') ?>
                 </div>
             <?php endif; ?>
 
-            <img src="imgs/login.png" alt="ICONO" class="mb-3" style="max-width:80px;">
+            <img src="imgs/login.png" alt="ICONO" class="mb-3" style="max-width:100px;">
             <h1>Inicio de Sesión</h1>
 
-            <form method="POST" action="" autocomplete="off">
+            <form method="POST" action="/Catedra/auth/login.php" autocomplete="off">
                 <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <div class="mb-3 text-start">
                     <label for="inputUsuario" class="form-label">Usuario</label>
@@ -100,7 +43,7 @@ $TituloSeccion = "Inicio de Sesión";
                         class="form-control"
                         required
                         autofocus
-                        value="<?= isset($usuario) ? htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8') : '' ?>"
+                        value="<?= htmlspecialchars($usuario, ENT_QUOTES, 'UTF-8') ?>"
                     >
                 </div>
                 <div class="mb-3 text-start">
@@ -115,8 +58,8 @@ $TituloSeccion = "Inicio de Sesión";
                             minlength="5"
                             maxlength="128"
                         >
-                        <button class="btn btn-outline-secondary reveal" type="button">
-                            <img id="abrircerrar" src="imgs/open.png" alt="Mostrar/ocultar" style="width:20px;">
+                        <button class="btn btn-outline-secondary reveal" type="button" aria-label="Mostrar u ocultar contraseña">
+                            <img id="abrircerrar" src="imgs/open.png" alt="" style="width:20px;">
                         </button>
                     </div>
                 </div>
@@ -126,18 +69,12 @@ $TituloSeccion = "Inicio de Sesión";
             </form>
 
             <div class="d-grid gap-2 mt-3">
-                <button
-                    type="button"
-                    class="btn btn-link"
-                    onclick="location.href='views/usuarios.php'"
-                >
-                    Crear / Ver Usuarios
-                </button>
+                <a href="views/usuarios.php" class="btn btn-link">
+                    Crear cuenta nueva
+                </a>
             </div>
         </div>
     </div>
-
-    <?php require_once __DIR__ . '/basics/scripts.php'; ?>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const revealBtn = document.querySelector('.reveal'),
@@ -145,9 +82,9 @@ $TituloSeccion = "Inicio de Sesión";
               icon      = document.getElementById('abrircerrar');
         if (revealBtn && pwdField && icon) {
             revealBtn.addEventListener('click', function () {
-                const isPwd = pwdField.getAttribute('type') === 'password';
-                pwdField.setAttribute('type', isPwd ? 'text' : 'password');
-                icon.setAttribute('src', isPwd ? 'imgs/close.png' : 'imgs/open.png');
+                const isPwd = pwdField.type === 'password';
+                pwdField.type = isPwd ? 'text' : 'password';
+                icon.src = isPwd ? 'imgs/close.png' : 'imgs/open.png';
             });
         }
     });

@@ -9,7 +9,11 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/Catedra/views/usuarios.php">Usuarios</a>
+                    <a class="nav-link" href="">RAW</a>
+                    <a class="nav-link" href="">RAW</a>
+                    <a class="nav-link" href="">RAW</a>
+                    <a class="nav-link" href="">RAW</a>
+                    <a class="nav-link" href="">RAW</a>
                 </li>
             </ul>
         </div>

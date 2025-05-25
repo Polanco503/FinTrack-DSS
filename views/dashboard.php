@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['utenticado']) || $_SESSION['utenticado'] !== 'SI') {
-    header("Location: ../index.php");
+if (empty($_SESSION['autenticado']) || $_SESSION['autenticado'] !== 'SI') {
+    header("Location: /Catedra/auth/login.php");
     exit;
 }
 

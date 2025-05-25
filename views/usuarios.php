@@ -2,12 +2,6 @@
 // views/usuarios.php
 session_start();
 
-// 1) Control de acceso
-if (empty($_SESSION['utenticado']) || $_SESSION['utenticado']!=='SI') {
-    header("Location: ../index.php");
-    exit;
-}
-
 // 2) CSRF: generar token si no existe
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
