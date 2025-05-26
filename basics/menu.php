@@ -8,8 +8,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href="#">RAW1</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">RAW2</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Catedra/views/dashboard.php">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Catedra/views/calendario.php">Calendario</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Catedra/views/grafica.php"><i class="bi bi-bar-chart-fill"></i> Gráfica</a></li>
                 <li class="nav-item ms-2">
                     <button type="button" class="btn btn-outline-secondary" id="btnTema" title="Cambiar tema">
                         <span id="iconTema" class="bi bi-moon"></span>

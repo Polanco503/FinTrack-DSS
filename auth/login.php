@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['nombres'] = $row['nombres'] ?? '';
             $_SESSION['apellidos'] = $row['apellidos'] ?? '';
             $_SESSION['autenticado'] = "SI";
+            $_SESSION['usuario_id'] = $row['id'];
             session_regenerate_id(true);
             unset($_SESSION['csrf_token']);
 
